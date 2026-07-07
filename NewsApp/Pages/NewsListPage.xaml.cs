@@ -29,6 +29,13 @@ public partial class NewsListPage : ContentPage
 
     private async void CvNews_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        if (e.CurrentSelection.Count == 0)
+            return;
 
+        var article = (Article)e.CurrentSelection[0];
+
+        await Navigation.PushAsync(new NewsDetailPage(article));
+
+        CvNews.SelectedItem = null;
     }
 }
