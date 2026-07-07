@@ -19,19 +19,21 @@ public partial class NewsHomePage : ContentPage
     };
     public NewsHomePage()
 	{
-		InitializeComponent();
-        GetBreakingNews();
-        ArticleList = new List<Article>();
+        InitializeComponent();
+
         CvCategories.ItemsSource = CategoryList;
-	}
-	private async Task GetBreakingNews()
-	{
-		var apiService = new ApiService();
-		var newsResult = await apiService.GetNews("Sports");
-		foreach (var item in newsResult.Articles)
-		{
-			ArticleList.Add(item);
-		}
-		CvNews.ItemsSource = ArticleList;
-	}
+        CvCategories.SelectionChanged += CvCategories_SelectionChanged;
+
+    }
+    private async void CvCategories_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (e.CurrentSelection.Count == 0)
+            return;
+
+        var selectedCategory = (Category)e.CurrentSelection[0];
+
+        await Navigation.PushAsync(new NewsListPage(selectedCategory.Name));
+
+        CvCategories.SelectedItem = null;
+    }
 }
